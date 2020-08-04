@@ -10,7 +10,7 @@ class PingComponent extends Component{
     }
 
     componentWillMount() {
-        axios.get('api/ping')
+        axios.get('http://localhost:8080/api/ping')
             .then((response)=> {
                 this.setState(()=> {
                     return {pong : response.data.message}
