@@ -53,7 +53,7 @@ func Handlers(db datastore.Datastore) *mux.Router {
 	}).Methods("GET")
 
 	// Serve static files
-	r.PathPrefix("/").Handler(http.FileServer(http.Dir("../client/build/")))
+	r.PathPrefix("/").Handler(http.FileServer(http.Dir("../web")))
 
 	return r
 }

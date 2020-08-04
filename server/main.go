@@ -28,5 +28,5 @@ func main() {
 
 	// serve
 	log.Printf("Server up on port '%s'", port)
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
