@@ -6,20 +6,15 @@ import (
 	"auth/middleware"
 	"encoding/json"
 	"fmt"
-	"github.com/gorilla/mux"
 	"net/http"
+
+	"github.com/gorilla/mux"
 )
 
 func Handlers(db datastore.Datastore) *mux.Router {
 	r := mux.NewRouter().StrictSlash(true)
-	// Serve static files
-	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("../client/build/static/"))))
-	r.PathPrefix("/build/").Handler(http.StripPrefix("/build/", http.FileServer(http.Dir("../client/build/static/"))))
-	// Serve index page on all unhandled routes
-	r.PathPrefix("/").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		http.ServeFile(w, r, "../client/build/index.html")
-	})
 
+	// Serve index page on all unhandled routes
 	r.HandleFunc("/api/ping", func(writer http.ResponseWriter, request *http.Request) {
 		fmt.Print("Pong")
 		writer.WriteHeader(http.StatusOK)
@@ -56,6 +51,9 @@ func Handlers(db datastore.Datastore) *mux.Router {
 	s.HandleFunc("/GetPostsByPriority", func(writer http.ResponseWriter, request *http.Request) {
 		controllers.GetPostsByPriority(writer, request, db)
 	}).Methods("GET")
+
+	// Serve static files
+	r.PathPrefix("/").Handler(http.FileServer(http.Dir("../client/build/")))
 
 	return r
 }
