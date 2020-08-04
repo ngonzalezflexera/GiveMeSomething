@@ -13,8 +13,6 @@ import (
 
 func Handlers(db datastore.Datastore) *mux.Router {
 	r := mux.NewRouter().StrictSlash(true)
-	// Serve static files
-	r.PathPrefix("/app/").Handler(http.StripPrefix("/app/", http.FileServer(http.Dir("../client/build/"))))
 
 	// Serve index page on all unhandled routes
 	r.HandleFunc("/api/ping", func(writer http.ResponseWriter, request *http.Request) {
@@ -53,6 +51,9 @@ func Handlers(db datastore.Datastore) *mux.Router {
 	s.HandleFunc("/GetPostsByPriority", func(writer http.ResponseWriter, request *http.Request) {
 		controllers.GetPostsByPriority(writer, request, db)
 	}).Methods("GET")
+
+	// Serve static files
+	r.PathPrefix("/").Handler(http.FileServer(http.Dir("../client/build/")))
 
 	return r
 }
