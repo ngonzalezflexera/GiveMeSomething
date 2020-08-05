@@ -123,14 +123,14 @@ func connectDB() (*gorm.DB, error) {
 	if err != nil {
 		return nil, errors.New("error loading the .env file")
 	}
-	username := os.Getenv("databaseUser")
-	password := os.Getenv("databasePassword")
-	databaseName := os.Getenv("databaseName")
+	//username := os.Getenv("databaseUser")
+	//password := os.Getenv("databasePassword")
+	//databaseName := os.Getenv("databaseName")
 	databaseHost := os.Getenv("DATABASE_URL")
 
-	dbString := fmt.Sprintf("host=%s user=%s dbname=%s sslmode=disable password=%s", databaseHost, username, databaseName, password)
-	fmt.Println("Establishing connection to ", dbString)
-	db, err := gorm.Open("postgres", dbString)
+	//dbString := fmt.Sprintf("host=%s user=%s dbname=%s sslmode=disable password=%s", databaseHost, username, databaseName, password)
+	fmt.Println("Establishing connection to ", databaseHost)
+	db, err := gorm.Open("postgres", databaseHost)
 	//db.LogMode(true)
 
 	if err != nil {
