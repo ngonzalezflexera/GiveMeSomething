@@ -1,7 +1,7 @@
 package main
 
 import (
-	//"auth/datastore"
+	"auth/datastore"
 	"auth/routes"
 	"fmt"
 	"github.com/joho/godotenv"
@@ -21,8 +21,8 @@ func main() {
 
 	port := os.Getenv("PORT")
 
-	//db := datastore.NewDatastore("postgres")
-	//defer db.Close()
+	db := datastore.NewDatastore("postgres")
+	defer db.Close()
 	// Handle routes
 	http.Handle("/", routes.Handlers(nil))
 

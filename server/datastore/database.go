@@ -2,6 +2,7 @@ package datastore
 
 import (
 	"auth/model"
+	"fmt"
 )
 
 type Datastore interface {
@@ -17,6 +18,7 @@ type Datastore interface {
 
 func NewDatastore(dataStoreType string) Datastore {
 	if dataStoreType == "postgres" {
+		fmt.Println("Connecting to a postgres database...")
 		return createPostgresDatastore()
 	}
 	return nil

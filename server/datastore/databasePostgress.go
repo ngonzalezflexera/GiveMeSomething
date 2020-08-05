@@ -126,76 +126,83 @@ func connectDB() (*gorm.DB, error) {
 	username := os.Getenv("databaseUser")
 	password := os.Getenv("databasePassword")
 	databaseName := os.Getenv("databaseName")
-	databaseHost := os.Getenv("databaseHost")
+	databaseHost := os.Getenv("DATABASE_URL")
 
 	dbString := fmt.Sprintf("host=%s user=%s dbname=%s sslmode=disable password=%s", databaseHost, username, databaseName, password)
+	fmt.Println("Establishing connection to ", dbString)
 	db, err := gorm.Open("postgres", dbString)
 	//db.LogMode(true)
 
 	if err != nil {
 		return nil, errors.New("error connecting to the database, " + err.Error())
 	}
-	db.AutoMigrate(
+	err = db.AutoMigrate(
 		&model.User{},
-		&model.Todo{})
-	db.Model(&model.Todo{}).AddForeignKey("user_id", "Users(id)", "CASCADE", "RESTRICT")
-
+		&model.Todo{}).Error
+	if err != nil {
+		return nil, errors.New("error connecting to the database, " + err.Error())
+	}
+	err = db.Model(&model.Todo{}).AddForeignKey("user_id", "Users(id)", "CASCADE", "RESTRICT").Error
+	if err != nil {
+		return nil, errors.New("error creating foreign keys, " + err.Error())
+	}
+	mockData(db)
 	return db, nil
 }
 
 func mockData(db *gorm.DB) {
-	//user := &model.User{
-	//	Name:     "Test1",
-	//	Email:    "test@test.com",
-	//	Password: "test",
-	//}
-	//user2 := &model.User{
-	//	Name:     "Test2",
-	//	Email:    "Test2@test.com",
-	//	Password: "test2",
-	//}
-	//todo1:= &model.Todo{
-	//	UserID:      10,
-	//	Title:       "Test",
-	//	URL:         "www.test.com",
-	//	Description: "testtest",
-	//	TimeToRead:  3,
-	//	Priority:    1,
-	//}
-	//todo2:= &model.Todo{
-	//	UserID:      10,
-	//	Title:       "Test2",
-	//	URL:         "www.test2.com",
-	//	Description: "testtest2",
-	//	TimeToRead:  3,
-	//	Priority:    1,
-	//}
-	//todo3:= &model.Todo{
-	//	UserID:      10,
-	//	Title:       "Test3",
-	//	URL:         "www.test3.com",
-	//	Description: "testtest3",
-	//	TimeToRead:  3,
-	//	Priority:    1,
-	//}
-	//todo4:= &model.Todo{
-	//	Title:       "Test4",
-	//	URL:         "www.test.com4",
-	//	Description: "testtest4",
-	//	TimeToRead:  3,
-	//	Priority:    1,
-	//}
-	//res := db.Create(user)
-	//fmt.Println(res.Error, " ", res.Value , " ", res.RowsAffected)
-	//user2.Todos = append(user2.Todos, todo4)
-	//res = db.Create(user2)
-	//fmt.Println(res.Error, " ", res.Value , " ", res.RowsAffected)
-	//res = db.Create(todo1)
-	//fmt.Println(res.Error, " ", res.Value , " ", res.RowsAffected)
-	//res = db.Create(todo2)
-	//fmt.Println(res.Error, " ", res.Value , " ", res.RowsAffected)
-	//res = db.Create(todo3)
-	//fmt.Println(res.Error, " ", res.Value , " ", res.RowsAffected)
+	user := &model.User{
+		Name:     "Test1",
+		Email:    "test@test.com",
+		Password: "test",
+	}
+	user2 := &model.User{
+		Name:     "Test2",
+		Email:    "Test2@test.com",
+		Password: "test2",
+	}
+	todo1 := &model.Todo{
+		UserID:      10,
+		Title:       "Test",
+		URL:         "www.test.com",
+		Description: "testtest",
+		TimeToRead:  3,
+		Priority:    1,
+	}
+	todo2 := &model.Todo{
+		UserID:      10,
+		Title:       "Test2",
+		URL:         "www.test2.com",
+		Description: "testtest2",
+		TimeToRead:  3,
+		Priority:    1,
+	}
+	todo3 := &model.Todo{
+		UserID:      10,
+		Title:       "Test3",
+		URL:         "www.test3.com",
+		Description: "testtest3",
+		TimeToRead:  3,
+		Priority:    1,
+	}
+	todo4 := &model.Todo{
+		Title:       "Test4",
+		URL:         "www.test.com4",
+		Description: "testtest4",
+		TimeToRead:  3,
+		Priority:    1,
+	}
+	res := db.Create(user)
+	fmt.Println(res.Error, " ", res.Value, " ", res.RowsAffected)
+	user2.Todos = append(user2.Todos, todo4)
+	res = db.Create(user2)
+	fmt.Println(res.Error, " ", res.Value, " ", res.RowsAffected)
+	res = db.Create(todo1)
+	fmt.Println(res.Error, " ", res.Value, " ", res.RowsAffected)
+	res = db.Create(todo2)
+	fmt.Println(res.Error, " ", res.Value, " ", res.RowsAffected)
+	res = db.Create(todo3)
+	fmt.Println(res.Error, " ", res.Value, " ", res.RowsAffected)
 
 	//// Method 1
 	//bar := &[]model.Todo{}
