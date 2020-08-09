@@ -146,7 +146,7 @@ func connectDB() (*gorm.DB, error) {
 	if err != nil {
 		return nil, errors.New("error creating foreign keys, " + err.Error())
 	}
-	mockData(db)
+	//mockData(db)
 	return db, nil
 }
 
